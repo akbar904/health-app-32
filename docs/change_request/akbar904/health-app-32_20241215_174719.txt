@@ -1,0 +1,1 @@
+Update so it have authentication feature, please just use shared preferences for saving the auth. Do use Appwrite Flutter
