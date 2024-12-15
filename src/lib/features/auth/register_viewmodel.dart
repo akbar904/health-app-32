@@ -14,16 +14,6 @@ class RegisterViewModel extends BaseViewModel {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
-
-  bool get hasModelError => _errorMessage != null;
-
-  void setModelError(String message) {
-    _errorMessage = message;
-    notifyListeners();
-  }
-
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your name';
@@ -89,7 +79,7 @@ class RegisterViewModel extends BaseViewModel {
         errorMessage =
             'Registration failed. Please check your information and try again.';
       }
-      setModelError(errorMessage);
+      setError(errorMessage);
     } finally {
       setBusy(false);
     }
