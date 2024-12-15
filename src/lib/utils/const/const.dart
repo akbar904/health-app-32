@@ -19,6 +19,12 @@ const defaultContactPhone = '';
 /// Introduction video link
 const introYoutubeId = 'fH1XuOxO65g';
 
+/// Appwrite endpoint
+const appwriteEndpoint = 'https://cloud.appwrite.io/v1';
+
+/// Appwrite project ID
+const appwriteProjectId = '675ed00de90cdb0b8076';
+
 /// default language list
 const defaultLanguagesList = [
   {'isoCode': 'en', 'name': 'English'},
