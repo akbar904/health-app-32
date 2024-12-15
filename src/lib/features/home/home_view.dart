@@ -12,6 +12,12 @@ class HomeView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text('Student Course Management'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: model.logout,
+            ),
+          ],
         ),
         body: Center(
           child: Column(
