@@ -1552,6 +1552,113 @@
         "package:shared_preferences/shared_preferences.dart",
         "package:stacked/stacked_annotations.dart"
       ]
+    },
+    {
+      "name": "lib/ui/theme/app_theme.dart",
+      "description": "This file defines the app's overall theme and styling, including colors, typography, and UI elements like buttons and inputs. It provides a centralized and consistent way to manage the visual design of the application.",
+      "class_diagram": "@startuml\nclass AppTheme {\n  +static ThemeData lightTheme\n}\n@enduml",
+      "methods": [
+        {
+          "name": "AppTheme",
+          "description": "This class is not instantiated directly, but rather serves as a container for the app's theme data.",
+          "parameters": null,
+          "return_type": null
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "lib/ui/common/app_colors.dart"
+      ]
+    },
+    {
+      "name": "lib/ui/shared/input_decorations.dart",
+      "description": "This file defines a set of reusable input field decorations for the application's UI, providing a consistent and visually appealing look and feel across various input fields.",
+      "class_diagram": "@startuml\nclass InputDecorations {\n  + static defaultInputDecoration(labelText, hintText, prefixIcon, suffixIcon): InputDecoration\n  + static searchInputDecoration(hintText, prefixIcon, suffixIcon): InputDecoration\n}\n@enduml",
+      "methods": [
+        {
+          "name": "defaultInputDecoration",
+          "description": "Generates a default input field decoration with customizable label text, hint text, prefix icon, and suffix icon.",
+          "parameters": [
+            "labelText",
+            "hintText",
+            "prefixIcon",
+            "suffixIcon"
+          ],
+          "return_type": "InputDecoration"
+        },
+        {
+          "name": "searchInputDecoration",
+          "description": "Generates a search input field decoration with customizable hint text, prefix icon, and suffix icon.",
+          "parameters": [
+            "hintText",
+            "prefixIcon",
+            "suffixIcon"
+          ],
+          "return_type": "InputDecoration"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/ui/common/app_colors.dart"
+      ]
+    },
+    {
+      "name": "lib/ui/shared/card_styles.dart",
+      "description": "This file defines the default styles and decorations for cards used throughout the application's UI. It provides a centralized place to manage and customize the visual appearance of cards, ensuring consistent styling across the application.",
+      "class_diagram": "@startuml\nclass CardStyles {\n  +static BoxDecoration defaultCardDecoration\n  +static BoxDecoration elevatedCardDecoration\n  +static BoxDecoration flatCardDecoration\n}\n@enduml",
+      "methods": [
+        {
+          "name": "defaultCardDecoration",
+          "description": "Provides the default styling for cards, including a white background, rounded corners, and a subtle drop shadow.",
+          "parameters": null,
+          "return_type": "BoxDecoration"
+        },
+        {
+          "name": "elevatedCardDecoration",
+          "description": "Provides the styling for elevated cards, which have a more pronounced drop shadow to create a raised effect.",
+          "parameters": null,
+          "return_type": "BoxDecoration"
+        },
+        {
+          "name": "flatCardDecoration",
+          "description": "Provides the styling for flat cards, which have a white background and a light grey border.",
+          "parameters": null,
+          "return_type": "BoxDecoration"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "my_app/ui/common/app_colors.dart"
+      ]
+    },
+    {
+      "name": "lib/ui/shared/elevated_button_styles.dart",
+      "description": "This Dart file defines a set of reusable styles for elevated buttons in the Flutter application. It provides a centralized location to manage the appearance and behavior of the application's primary, secondary, and outlined buttons.",
+      "class_diagram": "@startuml\nclass ElevatedButtonStyles {\n  + static primaryButton: ButtonStyle\n  + static secondaryButton: ButtonStyle\n  + static outlinedButton: ButtonStyle\n}\n@enduml",
+      "methods": [
+        {
+          "name": "primaryButton",
+          "description": "Defines the style for the primary elevated button used throughout the application. This button has a primary color background, white text, no elevation, and rounded corners.",
+          "parameters": null,
+          "return_type": "ButtonStyle"
+        },
+        {
+          "name": "secondaryButton",
+          "description": "Defines the style for the secondary elevated button used throughout the application. This button has a secondary color background, white text, no elevation, and rounded corners.",
+          "parameters": null,
+          "return_type": "ButtonStyle"
+        },
+        {
+          "name": "outlinedButton",
+          "description": "Defines the style for the outlined elevated button used throughout the application. This button has a transparent background, primary color text, no elevation, and a primary color border with rounded corners.",
+          "parameters": null,
+          "return_type": "ButtonStyle"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/ui/common/app_colors.dart"
+      ]
     }
   ],
   "dependencies": [
