@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/ui/common/app_colors.dart';
 
 class AuthButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isLoading;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   const AuthButton({
     required this.text,
     required this.onPressed,
     this.isLoading = false,
+    this.backgroundColor,
+    this.textColor,
     super.key,
   });
 
@@ -19,10 +24,13 @@ class AuthButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor ?? kcPrimaryColor,
+          foregroundColor: textColor ?? Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
           ),
+          elevation: 0,
         ),
         child: isLoading
             ? const SizedBox(
@@ -38,6 +46,7 @@ class AuthButton extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
       ),

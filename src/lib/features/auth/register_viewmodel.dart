@@ -14,18 +14,32 @@ class RegisterViewModel extends BaseViewModel {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Name is required';
+      return 'Please enter your name';
+    }
+    if (value.length < 2) {
+      return 'Name must be at least 2 characters long';
     }
     return null;
   }
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return 'Please enter your email address';
     }
-    if (!value.contains('@')) {
+    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+        .hasMatch(value)) {
       return 'Please enter a valid email address';
     }
     return null;
@@ -33,10 +47,16 @@ class RegisterViewModel extends BaseViewModel {
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'Please enter a password';
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return 'Password must be at least 6 characters long';
+    }
+    if (!value.contains(RegExp(r'[A-Z]'))) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!value.contains(RegExp(r'[0-9]'))) {
+      return 'Password must contain at least one number';
     }
     return null;
   }
@@ -47,28 +67,29 @@ class RegisterViewModel extends BaseViewModel {
     try {
       setBusy(true);
       await _authRepository.register(
-        emailController.text,
+        emailController.text.trim(),
         passwordController.text,
-        nameController.text,
+        nameController.text.trim(),
       );
       await _navigationService.replaceWithHomeView();
     } catch (e) {
-      String errorMessage = 'Unable to create account. Please try again.';
-
+      String errorMessage;
       if (e.toString().contains('email-already-in-use')) {
         errorMessage =
-            'An account already exists with this email address. Please try logging in instead.';
-      } else if (e.toString().contains('invalid-email')) {
-        errorMessage = 'Please enter a valid email address.';
+            'This email address is already registered. Please try logging in instead.';
       } else if (e.toString().contains('weak-password')) {
         errorMessage =
-            'Please choose a stronger password. It should be at least 6 characters long.';
+            'Your password is too weak. Please choose a stronger password.';
+      } else if (e.toString().contains('invalid-email')) {
+        errorMessage = 'Please enter a valid email address.';
       } else if (e.toString().contains('network')) {
         errorMessage =
-            'Network error. Please check your internet connection and try again.';
+            'Unable to connect to the server. Please check your internet connection.';
+      } else {
+        errorMessage =
+            'Registration failed. Please check your information and try again.';
       }
-
-      setError(errorMessage);
+      setModelError(errorMessage);
     } finally {
       setBusy(false);
     }

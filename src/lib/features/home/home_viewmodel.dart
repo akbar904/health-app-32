@@ -10,12 +10,33 @@ class HomeViewModel extends BaseViewModel {
 
   String get userName => _authRepository.currentUser?.name ?? 'User';
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
   Future<void> navigateToCourses() async {
-    await _navigationService.navigateToCoursesView();
+    try {
+      await _navigationService.navigateToCoursesView();
+    } catch (e) {
+      setModelError('Unable to access courses at this time. Please try again.');
+    }
   }
 
   Future<void> logout() async {
-    await _authRepository.logout();
-    await _navigationService.replaceWithLoginView();
+    try {
+      setBusy(true);
+      await _authRepository.logout();
+      await _navigationService.replaceWithLoginView();
+    } catch (e) {
+      setModelError('Failed to log out. Please try again.');
+    } finally {
+      setBusy(false);
+    }
   }
 }

@@ -1,0 +1,1 @@
+Make the UI to be way more modern and slick. Also change all view to use modelError instead of model.error when showing error

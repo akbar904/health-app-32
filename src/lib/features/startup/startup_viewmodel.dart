@@ -8,13 +8,30 @@ class StartupViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final _authRepository = locator<AuthRepository>();
 
-  Future runStartupLogic() async {
-    await Future.delayed(const Duration(seconds: 1));
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
 
-    if (_authRepository.isAuthenticated()) {
-      await _navigationService.replaceWithHomeView();
-    } else {
-      await _navigationService.replaceWithLoginView();
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
+  Future<void> runStartupLogic() async {
+    try {
+      setBusy(true);
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (_authRepository.isAuthenticated()) {
+        await _navigationService.replaceWithHomeView();
+      } else {
+        await _navigationService.replaceWithLoginView();
+      }
+    } catch (e) {
+      setModelError('Failed to initialize the application. Please try again.');
+    } finally {
+      setBusy(false);
     }
   }
 }
