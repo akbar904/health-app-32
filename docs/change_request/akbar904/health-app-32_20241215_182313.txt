@@ -1,0 +1,1 @@
+On login and register, fix the error message please so it humanable. now is wierd (like Minified something)

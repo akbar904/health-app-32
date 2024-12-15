@@ -26,7 +26,7 @@ class RegisterViewModel extends BaseViewModel {
       return 'Email is required';
     }
     if (!value.contains('@')) {
-      return 'Please enter a valid email';
+      return 'Please enter a valid email address';
     }
     return null;
   }
@@ -53,7 +53,22 @@ class RegisterViewModel extends BaseViewModel {
       );
       await _navigationService.replaceWithHomeView();
     } catch (e) {
-      setError(e.toString());
+      String errorMessage = 'Unable to create account. Please try again.';
+
+      if (e.toString().contains('email-already-in-use')) {
+        errorMessage =
+            'An account already exists with this email address. Please try logging in instead.';
+      } else if (e.toString().contains('invalid-email')) {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (e.toString().contains('weak-password')) {
+        errorMessage =
+            'Please choose a stronger password. It should be at least 6 characters long.';
+      } else if (e.toString().contains('network')) {
+        errorMessage =
+            'Network error. Please check your internet connection and try again.';
+      }
+
+      setError(errorMessage);
     } finally {
       setBusy(false);
     }

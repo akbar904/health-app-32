@@ -18,7 +18,7 @@ class LoginViewModel extends BaseViewModel {
       return 'Email is required';
     }
     if (!value.contains('@')) {
-      return 'Please enter a valid email';
+      return 'Please enter a valid email address';
     }
     return null;
   }
@@ -44,7 +44,22 @@ class LoginViewModel extends BaseViewModel {
       );
       await _navigationService.replaceWithHomeView();
     } catch (e) {
-      setError(e.toString());
+      String errorMessage =
+          'Unable to sign in. Please check your email and password and try again.';
+
+      if (e.toString().contains('user-not-found')) {
+        errorMessage =
+            'No account found with this email address. Please check your email or create a new account.';
+      } else if (e.toString().contains('wrong-password')) {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (e.toString().contains('invalid-email')) {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (e.toString().contains('network')) {
+        errorMessage =
+            'Network error. Please check your internet connection and try again.';
+      }
+
+      setError(errorMessage);
     } finally {
       setBusy(false);
     }
