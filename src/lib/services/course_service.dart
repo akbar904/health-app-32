@@ -1,10 +1,11 @@
+import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/features/courses/course_repository.dart';
 import 'package:my_app/models/course.dart';
 
 class CourseService {
-  final CourseRepository _repository;
+  final _repository = locator<CourseRepository>();
 
-  CourseService(this._repository);
+  CourseService();
 
   List<Course> get courses => _repository.getCourses();
 
