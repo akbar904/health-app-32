@@ -12,11 +12,19 @@ class HomeView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: const Text('Student Course Management'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: model.logout,
+            ),
+          ],
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text('Welcome, ${model.userName}!'),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: model.navigateToCourses,
                 child: const Text('View My Courses'),
