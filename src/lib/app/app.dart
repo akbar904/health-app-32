@@ -24,7 +24,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
-    LazySingleton(classType: AuthService),
+    InitializableSingleton(classType: AuthService),
     LazySingleton(classType: AuthRepository),
     LazySingleton(classType: CourseRepository),
     LazySingleton(classType: CourseService),
