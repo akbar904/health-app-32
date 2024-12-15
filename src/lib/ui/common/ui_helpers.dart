@@ -1,12 +1,12 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:my_app/ui/common/app_colors.dart';
 
-const double _tinySize = 5;
-const double _smallSize = 10;
-const double _mediumSize = 25;
-const double _largeSize = 50;
-const double _massiveSize = 120;
+const double _tinySize = 4;
+const double _smallSize = 8;
+const double _mediumSize = 16;
+const double _largeSize = 24;
+const double _massiveSize = 32;
 
 const Widget horizontalSpaceTiny = SizedBox(width: _tinySize);
 const Widget horizontalSpaceSmall = SizedBox(width: _smallSize);
@@ -19,15 +19,16 @@ const Widget verticalSpaceMedium = SizedBox(height: _mediumSize);
 const Widget verticalSpaceLarge = SizedBox(height: _largeSize);
 const Widget verticalSpaceMassive = SizedBox(height: _massiveSize);
 
-Widget spacedDivider = const Column(
-  children: <Widget>[
+Widget spacedDivider = Column(
+  children: const <Widget>[
     verticalSpaceMedium,
-    Divider(color: Colors.blueGrey, height: 5),
+    Divider(color: kcLightGrey, thickness: 1),
     verticalSpaceMedium,
   ],
 );
 
 Widget verticalSpace(double height) => SizedBox(height: height);
+Widget horizontalSpace(double width) => SizedBox(width: width);
 
 double screenWidth(BuildContext context) => MediaQuery.of(context).size.width;
 double screenHeight(BuildContext context) => MediaQuery.of(context).size.height;
@@ -57,34 +58,59 @@ double thirdScreenWidth(BuildContext context) =>
 double quarterScreenWidth(BuildContext context) =>
     screenWidthFraction(context, dividedBy: 4);
 
-double getResponsiveHorizontalSpaceMedium(BuildContext context) =>
-    screenWidthFraction(context, dividedBy: 10);
-double getResponsiveSmallFontSize(BuildContext context) =>
-    getResponsiveFontSize(context, fontSize: 14, max: 15);
+EdgeInsets screenPadding(BuildContext context) =>
+    MediaQuery.of(context).padding;
 
-double getResponsiveMediumFontSize(BuildContext context) =>
-    getResponsiveFontSize(context, fontSize: 16, max: 17);
-
-double getResponsiveLargeFontSize(BuildContext context) =>
-    getResponsiveFontSize(context, fontSize: 21, max: 31);
-
-double getResponsiveExtraLargeFontSize(BuildContext context) =>
-    getResponsiveFontSize(context, fontSize: 25);
-
-double getResponsiveMassiveFontSize(BuildContext context) =>
-    getResponsiveFontSize(context, fontSize: 30);
-
-double getResponsiveFontSize(
-  BuildContext context, {
-  double? fontSize,
-  double? max,
-}) {
-  max ??= 100;
-
-  final responsiveSize = min(
-    screenWidthFraction(context, dividedBy: 10) * ((fontSize ?? 100) / 100),
-    max,
+Widget errorMessageWidget(String message) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: kcErrorRed.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: kcErrorRed.withOpacity(0.3)),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.error_outline, color: kcErrorRed, size: 20),
+        horizontalSpaceSmall,
+        Expanded(
+          child: Text(
+            message,
+            style: const TextStyle(
+              color: kcErrorRed,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    ),
   );
+}
 
-  return responsiveSize;
+Widget successMessageWidget(String message) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: kcSuccessGreen.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: kcSuccessGreen.withOpacity(0.3)),
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.check_circle_outline, color: kcSuccessGreen, size: 20),
+        horizontalSpaceSmall,
+        Expanded(
+          child: Text(
+            message,
+            style: const TextStyle(
+              color: kcSuccessGreen,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

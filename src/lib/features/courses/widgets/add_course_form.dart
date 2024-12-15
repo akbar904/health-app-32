@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/models/course.dart';
+import 'package:my_app/ui/common/app_colors.dart';
 import 'package:my_app/ui/common/ui_helpers.dart';
 
 class AddCourseForm extends StatefulWidget {
@@ -33,11 +34,11 @@ class _AddCourseFormState extends State<AddCourseForm> {
     if (_formKey.currentState!.validate()) {
       final course = Course(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: _nameController.text,
-        professor: _professorController.text,
-        schedule: _scheduleController.text,
+        name: _nameController.text.trim(),
+        professor: _professorController.text.trim(),
+        schedule: _scheduleController.text.trim(),
         credits: int.parse(_creditsController.text),
-        description: _descriptionController.text,
+        description: _descriptionController.text.trim(),
       );
 
       widget.onSubmit(course);
@@ -47,55 +48,67 @@ class _AddCourseFormState extends State<AddCourseForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        color: kcSurfaceWhite,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const Text(
+              'Add New Course',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: kcTextPrimary,
+              ),
+            ),
+            verticalSpaceMedium,
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Course Name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a course name';
-                }
-                return null;
-              },
+              decoration: const InputDecoration(
+                labelText: 'Course Name',
+                prefixIcon: Icon(Icons.book_outlined),
+              ),
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Please enter course name' : null,
             ),
             verticalSpaceSmall,
             TextFormField(
               controller: _professorController,
-              decoration: const InputDecoration(labelText: 'Professor'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a professor name';
-                }
-                return null;
-              },
+              decoration: const InputDecoration(
+                labelText: 'Professor',
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Please enter professor name' : null,
             ),
             verticalSpaceSmall,
             TextFormField(
               controller: _scheduleController,
-              decoration: const InputDecoration(labelText: 'Schedule'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a schedule';
-                }
-                return null;
-              },
+              decoration: const InputDecoration(
+                labelText: 'Schedule',
+                prefixIcon: Icon(Icons.schedule_outlined),
+              ),
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Please enter schedule' : null,
             ),
             verticalSpaceSmall,
             TextFormField(
               controller: _creditsController,
-              decoration: const InputDecoration(labelText: 'Credits'),
+              decoration: const InputDecoration(
+                labelText: 'Credits',
+                prefixIcon: Icon(Icons.stars_outlined),
+              ),
               keyboardType: TextInputType.number,
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter credits';
-                }
-                if (int.tryParse(value) == null) {
+                if (value?.isEmpty == true) return 'Please enter credits';
+                if (int.tryParse(value!) == null) {
                   return 'Please enter a valid number';
                 }
                 return null;
@@ -104,19 +117,32 @@ class _AddCourseFormState extends State<AddCourseForm> {
             verticalSpaceSmall,
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                prefixIcon: Icon(Icons.description_outlined),
+              ),
               maxLines: 3,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a description';
-                }
-                return null;
-              },
+              validator: (value) =>
+                  value?.isEmpty == true ? 'Please enter description' : null,
             ),
             verticalSpaceMedium,
             ElevatedButton(
               onPressed: _submitForm,
-              child: const Text('Add Course'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: kcPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Add Course',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),

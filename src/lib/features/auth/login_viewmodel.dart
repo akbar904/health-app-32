@@ -15,9 +15,10 @@ class LoginViewModel extends BaseViewModel {
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return 'Please enter your email address';
     }
-    if (!value.contains('@')) {
+    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+        .hasMatch(value)) {
       return 'Please enter a valid email address';
     }
     return null;
@@ -25,7 +26,7 @@ class LoginViewModel extends BaseViewModel {
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'Please enter your password';
     }
     if (value.length < 6) {
       return 'Password must be at least 6 characters';
@@ -39,27 +40,26 @@ class LoginViewModel extends BaseViewModel {
     try {
       setBusy(true);
       await _authRepository.login(
-        emailController.text,
+        emailController.text.trim(),
         passwordController.text,
       );
       await _navigationService.replaceWithHomeView();
     } catch (e) {
-      String errorMessage =
-          'Unable to sign in. Please check your email and password and try again.';
-
+      String errorMessage;
       if (e.toString().contains('user-not-found')) {
         errorMessage =
-            'No account found with this email address. Please check your email or create a new account.';
+            'No account found with this email. Please check your email or create a new account.';
       } else if (e.toString().contains('wrong-password')) {
         errorMessage = 'Incorrect password. Please try again.';
       } else if (e.toString().contains('invalid-email')) {
         errorMessage = 'Please enter a valid email address.';
       } else if (e.toString().contains('network')) {
         errorMessage =
-            'Network error. Please check your internet connection and try again.';
+            'Unable to connect to the server. Please check your internet connection.';
+      } else {
+        errorMessage = 'Login failed. Please try again.';
       }
-
-      setError(errorMessage);
+      setModelError(errorMessage);
     } finally {
       setBusy(false);
     }
