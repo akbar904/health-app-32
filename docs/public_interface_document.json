@@ -1,7 +1,7 @@
 {
   "package_name": "com.example_org.my_app",
-  "project_description": "The Flutter application is a course management system that allows users to view a list of available courses, add new courses, and interact with course-related features. The application follows the Stacked architecture, which separates concerns and provides a clean separation of business logic, UI, and state management.",
-  "architecture_overview": "The application's architecture is based on the Stacked pattern, which promotes a clean separation of concerns. The main components include ViewModels (e.g., HomeViewModel, StartupViewModel) that handle the business logic and state management, Views (e.g., HomeView, StartupView) that represent the UI, and a centralized Service Locator (app.locator.dart) that manages the application's dependencies. The app also utilizes the Stacked Router (app.router.dart) for navigation and routing between different screens.",
+  "project_description": "The Flutter application is a course management system that allows users to view a list of available courses, add new courses, and interact with course-related features. The application provides a clean user interface and follows the Stacked architecture, which separates concerns and promotes a clear separation of business logic, UI, and state management.",
+  "architecture_overview": "The application's architecture is based on the Stacked pattern, which promotes a clean separation of concerns. The main components include ViewModels (e.g., HomeViewModel, StartupViewModel, CoursesViewModel) that handle the business logic and state management, Views (e.g., HomeView, StartupView, CoursesView) that represent the UI, and a centralized Service Locator (app.locator.dart) that manages the application's dependencies. The app also utilizes the Stacked Router (app.router.dart) for navigation and routing between different screens, as well as the Stacked Services (DialogService, BottomSheetService) for handling custom UI components.",
   "files": [
     {
       "name": "lib/app/app.dart",
@@ -1219,6 +1219,339 @@
         "package:my_app/models/enums/flavor.dart",
         "package:my_app/ui/views/app/app_view.dart"
       ]
+    },
+    {
+      "name": "lib/features/auth/widgets/auth_text_field.dart",
+      "description": "The AuthTextField widget is responsible for providing a custom text input field for authentication-related screens in the application. It handles the presentation and validation of text input, catered specifically for authentication use cases.",
+      "class_diagram": "@startuml\nclass AuthTextField extends StatelessWidget {\n  -String label\n  -String? hint\n  -bool obscureText\n  -TextEditingController controller\n  -String? Function(String?)? validator\n  -TextInputType keyboardType\n  +Widget build(BuildContext context)\n}\n@enduml",
+      "methods": [
+        {
+          "name": "build",
+          "description": "Builds the AuthTextField widget, which includes a label, a TextFormField with customized decoration and behavior, and optional validation.",
+          "parameters": [
+            "BuildContext context"
+          ],
+          "return_type": "Widget"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/ui/common/app_colors.dart"
+      ]
+    },
+    {
+      "name": "lib/features/auth/widgets/auth_button.dart",
+      "description": "The AuthButton widget is a custom Flutter button component that provides a consistent and visually appealing login/signup button across the application's authentication screens. It handles the loading state, allowing for a smooth user experience while waiting for an authentication operation to complete.",
+      "class_diagram": "@startuml\nclass AuthButton extends StatelessWidget {\n  + String text\n  + VoidCallback onPressed\n  + bool isLoading\n  + build(BuildContext context): Widget\n}\n@enduml",
+      "methods": [
+        {
+          "name": "build",
+          "description": "Builds the AuthButton widget, which is a SizedBox containing an ElevatedButton. The button displays either a loading spinner or the provided text, depending on the value of the isLoading flag.",
+          "parameters": [
+            "BuildContext context"
+          ],
+          "return_type": "Widget"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart"
+      ]
+    },
+    {
+      "name": "lib/features/auth/register_view.dart",
+      "description": "The RegisterView class is responsible for rendering the user interface for the registration process in the application. It provides a form for users to enter their name, email, and password, and a button to submit the registration request.",
+      "class_diagram": "@startuml\nclass RegisterView {\n  + build(context: BuildContext): Widget\n}\n\nclass RegisterViewModel {\n  + formKey: GlobalKey<FormState>\n  + nameController: TextEditingController\n  + emailController: TextEditingController\n  + passwordController: TextEditingController\n  + register(): Future<void>\n  + validateName(value: String): String?\n  + validateEmail(value: String): String?\n  + validatePassword(value: String): String?\n  + navigateToLogin(): void\n  + hasError: bool\n  + error: Object\n  + isBusy: bool\n}\n\nRegisterView o-- RegisterViewModel\n@enduml",
+      "methods": [
+        {
+          "name": "build",
+          "description": "Builds the UI for the registration form, including input fields for name, email, and password, as well as a register button and a link to the login page.",
+          "parameters": [
+            "context: BuildContext"
+          ],
+          "return_type": "Widget"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/features/auth/register_viewmodel.dart",
+        "package:my_app/features/auth/widgets/auth_button.dart",
+        "package:my_app/features/auth/widgets/auth_text_field.dart",
+        "package:my_app/ui/common/ui_helpers.dart",
+        "package:stacked/stacked.dart"
+      ]
+    },
+    {
+      "name": "lib/features/auth/login_viewmodel.dart",
+      "description": "The LoginViewModel class is responsible for managing the login functionality of the application. It provides a centralized place to handle user authentication, including validating user input, interacting with the AuthRepository to perform the login, and managing the application navigation.",
+      "class_diagram": "@startuml\nclass LoginViewModel {\n  - final _authRepository: AuthRepository\n  - final _navigationService: NavigationService\n  - final formKey: GlobalKey<FormState>\n  - final emailController: TextEditingController\n  - final passwordController: TextEditingController\n  + String? validateEmail(String? value)\n  + String? validatePassword(String? value)\n  + Future<void> login()\n  + void navigateToRegister()\n  + dispose()\n}\n\nLoginViewModel --> AuthRepository\nLoginViewModel --> NavigationService\n@enduml",
+      "methods": [
+        {
+          "name": "validateEmail",
+          "description": "Validates the email input, ensuring it is not empty and is in a valid email format.",
+          "parameters": [
+            "String? value"
+          ],
+          "return_type": "String?"
+        },
+        {
+          "name": "validatePassword",
+          "description": "Validates the password input, ensuring it is not empty and is at least 6 characters long.",
+          "parameters": [
+            "String? value"
+          ],
+          "return_type": "String?"
+        },
+        {
+          "name": "login",
+          "description": "Handles the login process, including validating the form, interacting with the AuthRepository to perform the login, and navigating to the home view upon successful login.",
+          "parameters": [],
+          "return_type": "Future<void>"
+        },
+        {
+          "name": "navigateToRegister",
+          "description": "Navigates the user to the register view.",
+          "parameters": [],
+          "return_type": "void"
+        },
+        {
+          "name": "dispose",
+          "description": "Disposes of the email and password controllers when the view model is no longer needed.",
+          "parameters": [],
+          "return_type": "void"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/app/app.locator.dart",
+        "package:my_app/app/app.router.dart",
+        "package:my_app/features/auth/auth_repository.dart",
+        "package:stacked/stacked.dart",
+        "package:stacked_services/stacked_services.dart"
+      ]
+    },
+    {
+      "name": "lib/features/auth/login_view.dart",
+      "description": "The LoginView class is responsible for providing the user interface for the login functionality of the application. It allows users to enter their email and password, and then handles the login process by interacting with the LoginViewModel.",
+      "class_diagram": "@startuml\nclass LoginView {\n  +build(context: BuildContext): Widget\n}\n\nclass LoginViewModel {\n  +emailController: TextEditingController\n  +passwordController: TextEditingController\n  +formKey: GlobalKey<FormState>\n  +isBusy: boolean\n  +hasError: boolean\n  +error: dynamic\n  +login(): void\n  +navigateToRegister(): void\n  +validateEmail(email: String): String?\n  +validatePassword(password: String): String?\n}\n\nLoginView --> LoginViewModel\n@enduml",
+      "methods": [
+        {
+          "name": "build",
+          "description": "Builds the UI for the login screen, including input fields for email and password, a login button, and a link to the registration screen.",
+          "parameters": [
+            "context: BuildContext"
+          ],
+          "return_type": "Widget"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/features/auth/login_viewmodel.dart",
+        "package:my_app/features/auth/widgets/auth_button.dart",
+        "package:my_app/features/auth/widgets/auth_text_field.dart",
+        "package:my_app/ui/common/ui_helpers.dart",
+        "package:stacked/stacked.dart"
+      ]
+    },
+    {
+      "name": "lib/models/user.dart",
+      "description": "The `User` class in this file represents a user of the application. It encapsulates the core user data, including the user's unique identifier, email, and name. This class serves as a standardized data model for user-related functionality across the application.",
+      "class_diagram": "@startuml\nclass User {\n  +final String id\n  +final String email\n  +final String name\n  +User.fromJson(Map<String, dynamic>)\n  +Map<String, dynamic> toJson()\n  +List<Object?> get props\n}\n@enduml",
+      "methods": [
+        {
+          "name": "User.fromJson",
+          "description": "A factory constructor that creates a `User` instance from a JSON map. This allows for easy deserialization of user data from a data source, such as an API or a database.",
+          "parameters": [
+            "Map<String, dynamic>"
+          ],
+          "return_type": "User"
+        },
+        {
+          "name": "toJson",
+          "description": "Converts the `User` instance to a JSON map. This enables easy serialization of user data for storage or transmission, such as sending user data to a backend server.",
+          "parameters": null,
+          "return_type": "Map<String, dynamic>"
+        },
+        {
+          "name": "get props",
+          "description": "Returns a list of the properties that define the equality of a `User` instance. This is used by the `Equatable` mixin to provide a default implementation of `==` and `hashCode`.",
+          "parameters": null,
+          "return_type": "List<Object?>"
+        }
+      ],
+      "dependencies": [
+        "package:equatable/equatable.dart"
+      ]
+    },
+    {
+      "name": "lib/features/auth/auth_repository.dart",
+      "description": "The AuthRepository class is the central component responsible for handling user authentication and authorization within the application. It serves as a bridge between the application's user interface and the underlying authentication services, providing a consistent and reliable way to manage user login, registration, and logout operations.",
+      "class_diagram": "@startuml\nclass AuthRepository {\n  -AuthService _authService\n  +Future<User> login(String email, String password)\n  +Future<User> register(String email, String password, String name)\n  +Future<void> logout()\n  +bool isAuthenticated()\n  +User? get currentUser\n}\n\nAuthRepository --> AuthService\n@enduml",
+      "methods": [
+        {
+          "name": "login",
+          "description": "Logs in a user with the provided email and password, returning the authenticated User instance.",
+          "parameters": [
+            "String email",
+            "String password"
+          ],
+          "return_type": "Future<User>"
+        },
+        {
+          "name": "register",
+          "description": "Registers a new user with the provided email, password, and name, returning the newly created User instance.",
+          "parameters": [
+            "String email",
+            "String password",
+            "String name"
+          ],
+          "return_type": "Future<User>"
+        },
+        {
+          "name": "logout",
+          "description": "Logs out the currently authenticated user and clears any session-related data.",
+          "parameters": null,
+          "return_type": "Future<void>"
+        },
+        {
+          "name": "isAuthenticated",
+          "description": "Checks if the user is currently authenticated and returns the authentication status.",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "currentUser",
+          "description": "Provides the currently authenticated User instance, or null if no user is signed in.",
+          "parameters": null,
+          "return_type": "User?"
+        }
+      ],
+      "dependencies": [
+        "my_app/app/app.locator.dart",
+        "my_app/models/user.dart",
+        "my_app/services/auth_service.dart"
+      ]
+    },
+    {
+      "name": "lib/features/auth/register_viewmodel.dart",
+      "description": "The RegisterViewModel class is responsible for handling the registration functionality of the application. It provides the necessary logic and data management to allow users to register a new account with the application.",
+      "class_diagram": "@startuml\nclass RegisterViewModel {\n  - _authRepository: AuthRepository\n  - _navigationService: NavigationService\n  + formKey: GlobalKey<FormState>\n  + nameController: TextEditingController\n  + emailController: TextEditingController\n  + passwordController: TextEditingController\n  + validateName(String?): String?\n  + validateEmail(String?): String?\n  + validatePassword(String?): String?\n  + register(): Future<void>\n  + navigateToLogin(): void\n  + dispose(): void\n}\n@enduml",
+      "methods": [
+        {
+          "name": "validateName",
+          "description": "Validates the user's name input, ensuring it is not empty.",
+          "parameters": [
+            "String?"
+          ],
+          "return_type": "String?"
+        },
+        {
+          "name": "validateEmail",
+          "description": "Validates the user's email input, ensuring it is not empty and is a valid email format.",
+          "parameters": [
+            "String?"
+          ],
+          "return_type": "String?"
+        },
+        {
+          "name": "validatePassword",
+          "description": "Validates the user's password input, ensuring it is not empty and is at least 6 characters long.",
+          "parameters": [
+            "String?"
+          ],
+          "return_type": "String?"
+        },
+        {
+          "name": "register",
+          "description": "Attempts to register the user with the provided name, email, and password. If the form is valid, it calls the AuthRepository to register the user and then navigates to the home view.",
+          "parameters": null,
+          "return_type": "Future<void>"
+        },
+        {
+          "name": "navigateToLogin",
+          "description": "Navigates the user to the login view.",
+          "parameters": null,
+          "return_type": "void"
+        },
+        {
+          "name": "dispose",
+          "description": "Disposes of the text editing controllers to prevent memory leaks.",
+          "parameters": null,
+          "return_type": "void"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/material.dart",
+        "package:my_app/app/app.locator.dart",
+        "package:my_app/app/app.router.dart",
+        "package:my_app/features/auth/auth_repository.dart",
+        "package:stacked/stacked.dart",
+        "package:stacked_services/stacked_services.dart"
+      ]
+    },
+    {
+      "name": "lib/services/auth_service.dart",
+      "description": "The AuthService class is responsible for handling user authentication and authorization within the application. It provides functionality for user login, registration, and logout, as well as managing the currently authenticated user's information.",
+      "class_diagram": "@startuml\nclass AuthService implements InitializableDependency {\n  - String userKey\n  - Client client\n  - Account account\n  - SharedPreferences _prefs\n  - User? _currentUser\n  - User? currentUser\n\n  + init()\n  + login(String email, String password): Future<User>\n  + register(String email, String password, String name): Future<User>\n  + logout(): Future<void>\n  + isAuthenticated(): bool\n  - _loadUserFromPrefs(): Future<void>\n  - _saveUserToPrefs(User user): Future<void>\n}\n@enduml",
+      "methods": [
+        {
+          "name": "init",
+          "description": "Initializes the AuthService by setting up the Appwrite client, account, and loading the currently authenticated user from shared preferences.",
+          "parameters": null,
+          "return_type": "Future<void>"
+        },
+        {
+          "name": "login",
+          "description": "Authenticates a user with the provided email and password, and saves the user's information to shared preferences.",
+          "parameters": [
+            "String email",
+            "String password"
+          ],
+          "return_type": "Future<User>"
+        },
+        {
+          "name": "register",
+          "description": "Registers a new user with the provided email, password, and name, and saves the user's information to shared preferences.",
+          "parameters": [
+            "String email",
+            "String password",
+            "String name"
+          ],
+          "return_type": "Future<User>"
+        },
+        {
+          "name": "logout",
+          "description": "Logs out the currently authenticated user and removes their information from shared preferences.",
+          "parameters": null,
+          "return_type": "Future<void>"
+        },
+        {
+          "name": "isAuthenticated",
+          "description": "Checks if there is a currently authenticated user.",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "_loadUserFromPrefs",
+          "description": "Loads the currently authenticated user's information from shared preferences.",
+          "parameters": null,
+          "return_type": "Future<void>"
+        },
+        {
+          "name": "_saveUserToPrefs",
+          "description": "Saves the currently authenticated user's information to shared preferences.",
+          "parameters": [
+            "User user"
+          ],
+          "return_type": "Future<void>"
+        }
+      ],
+      "dependencies": [
+        "dart:convert",
+        "package:appwrite/appwrite.dart",
+        "package:my_app/models/user.dart",
+        "package:shared_preferences/shared_preferences.dart",
+        "package:stacked/stacked_annotations.dart"
+      ]
     }
   ],
   "dependencies": [
@@ -1243,7 +1576,7 @@
       "purpose": "Creating gaps in layouts"
     }
   ],
-  "sequence_diagram": "@startuml\nactor User\nparticipant main\nparticipant AppView\nparticipant StartupView\nparticipant StartupViewModel\nparticipant HomeView\nparticipant HomeViewModel\n\nUser -> main: Launch app\nmain -> AppView: Create and run\nAppView -> StartupView: Initialize\nStartupView -> StartupViewModel: Run startup logic\nStartupViewModel -> HomeView: Navigate on completion\nHomeView -> HomeViewModel: Initialize\nUser -> HomeView: Interact\nHomeView -> HomeViewModel: Handle user actions\nHomeViewModel -> HomeView: Update UI\nHomeViewModel -> DialogService: Show dialog\nHomeViewModel -> BottomSheetService: Show bottom sheet\n@enduml",
-  "state_management_flow": "The application uses the Stacked architecture for state management. Each view has a corresponding ViewModel that handles the business logic and state for that view. The ViewModels use observable properties and notifiers to update the UI when the state changes. The app.locator.dart file sets up the dependency injection, allowing the ViewModels to access necessary services and repositories.",
-  "navigation_flow": "The navigation flow of the application is managed using the Stacked Router, which is defined in the app.router.dart file. The AppView sets up the initial route, which is the StartupView. After the startup logic is completed, the StartupViewModel navigates to the HomeView. The user can then interact with the HomeView, triggering actions that may result in the display of dialogs or bottom sheets, managed by the HomeViewModel."
+  "sequence_diagram": "@startuml\nactor User\nparticipant main\nparticipant AppView\nparticipant StartupView\nparticipant StartupViewModel\nparticipant HomeView\nparticipant HomeViewModel\nparticipant CoursesView\nparticipant CoursesViewModel\n\nUser -> main: Launch app\nmain -> AppView: Create and run\nAppView -> StartupView: Initialize\nStartupView -> StartupViewModel: Run startup logic\nStartupViewModel -> HomeView: Navigate to home view\nHomeView -> HomeViewModel: Initialize\nUser -> HomeView: Interact (e.g., increment counter, show dialog, show bottom sheet)\nHomeView -> HomeViewModel: Handle user actions\nHomeViewModel -> HomeView: Update UI\nHomeViewModel -> DialogService: Show dialog\nHomeViewModel -> BottomSheetService: Show bottom sheet\nUser -> CoursesView: Navigate to courses view\nCoursesView -> CoursesViewModel: Initialize\nCoursesViewModel -> CourseRepository: Fetch courses\nCoursesView -> CourseCard: Display course details\nUser -> CoursesView: Add new course\nCoursesView -> AddCourseForm: Show form\nAddCourseForm -> CoursesViewModel: Submit new course\nCoursesViewModel -> CourseRepository: Add new course\n@enduml",
+  "state_management_flow": "The application uses the Stacked architecture for state management. Each view has a corresponding ViewModel that handles the business logic and state for that view. The ViewModels use observable properties and notifiers to update the UI when the state changes. For example, the HomeViewModel manages the counter value, while the CoursesViewModel manages the list of courses. The app.locator.dart file sets up the dependency injection, allowing the ViewModels to access necessary services and repositories, such as the CourseRepository and DialogService.",
+  "navigation_flow": "The navigation flow of the application is managed using the Stacked Router, which is defined in the app.router.dart file. The AppView sets up the initial route, which is the StartupView. After the startup logic is completed, the StartupViewModel navigates to the HomeView. From the HomeView, the user can navigate to the CoursesView by clicking a button or menu item. The Stacked Router provides methods for navigating between views, such as `navigateToHomeView` and `navigateToCoursesView`, which are used in the ViewModels to handle navigation actions."
 }
