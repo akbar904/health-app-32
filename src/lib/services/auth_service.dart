@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:appwrite/appwrite.dart';
 import 'package:my_app/models/user.dart';
-import 'package:shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 class AuthService implements InitializableDependency {
@@ -21,13 +21,14 @@ class AuthService implements InitializableDependency {
 
     account = Account(client);
     _prefs = await SharedPreferences.getInstance();
-    _loadUserFromPrefs();
+    await _loadUserFromPrefs();
   }
 
   Future<void> _loadUserFromPrefs() async {
     final userJson = _prefs.getString(userKey);
     if (userJson != null) {
-      _currentUser = User.fromJson(jsonDecode(userJson));
+      final Map<String, dynamic> jsonMap = json.decode(userJson) as Map<String, dynamic>;
+      _currentUser = User.fromJson(jsonMap);
     }
   }
 
@@ -44,7 +45,7 @@ class AuthService implements InitializableDependency {
       );
 
       final user = User(
-        id: session.userId,
+        id: session.$id,
         email: email,
         name: email.split('@')[0], // Default name from email
       );
