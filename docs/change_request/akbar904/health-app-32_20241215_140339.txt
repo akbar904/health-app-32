@@ -1,0 +1,9 @@
+Write me an app that has a student course management system with these features:
+
+
+A page to view all enrolled courses in a card layout
+Each course card should show the course name, schedule, professor, and credits
+A form to add new courses with fields for course details
+Ability to remove courses from the schedule
+Use modern UI components and a responsive design
+Please include sample data to demonstrate the functionality
