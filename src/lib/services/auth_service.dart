@@ -105,9 +105,9 @@ class AuthService implements InitializableDependency {
       String message;
       switch (e.code) {
         case 400:
-          if (e.message.contains('password')) {
+          if (e.message?.contains('password') ?? false) {
             message = 'Password must be at least 8 characters long.';
-          } else if (e.message.contains('email')) {
+          } else if (e.message?.contains('email') ?? false) {
             message = 'Please enter a valid email address.';
           } else {
             message =
