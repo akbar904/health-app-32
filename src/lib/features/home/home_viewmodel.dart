@@ -1,7 +1,7 @@
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/app/app.router.dart';
+import 'package:my_app/core/base_viewmodel.dart';
 import 'package:my_app/features/auth/auth_repository.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
@@ -14,7 +14,7 @@ class HomeViewModel extends BaseViewModel {
     try {
       await _navigationService.navigateToCoursesView();
     } catch (e) {
-      setError('Unable to access courses at this time. Please try again.');
+      setErrorMessage('Unable to access courses at this time. Please try again.');
     }
   }
 
@@ -24,7 +24,7 @@ class HomeViewModel extends BaseViewModel {
       await _authRepository.logout();
       await _navigationService.replaceWithLoginView();
     } catch (e) {
-      setError('Failed to log out. Please try again.');
+      setErrorMessage('Failed to log out. Please try again.');
     } finally {
       setBusy(false);
     }

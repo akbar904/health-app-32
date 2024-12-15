@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/app/app.router.dart';
+import 'package:my_app/core/base_viewmodel.dart';
 import 'package:my_app/features/auth/auth_repository.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends BaseViewModel {
@@ -59,7 +59,7 @@ class LoginViewModel extends BaseViewModel {
       } else {
         errorMessage = 'Login failed. Please try again.';
       }
-      setError(errorMessage);
+      setErrorMessage(errorMessage);
     } finally {
       setBusy(false);
     }
