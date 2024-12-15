@@ -14,7 +14,7 @@ class LoginView extends StatelessWidget {
       viewModelBuilder: () => LoginViewModel(),
       builder: (context, model, child) => Scaffold(
         body: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Form(
               key: model.formKey,
@@ -34,6 +34,7 @@ class LoginView extends StatelessWidget {
                     controller: model.emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: model.validateEmail,
+                    enabled: !model.isBusy,
                   ),
                   verticalSpaceMedium,
                   AuthTextField(
@@ -41,6 +42,7 @@ class LoginView extends StatelessWidget {
                     controller: model.passwordController,
                     obscureText: true,
                     validator: model.validatePassword,
+                    enabled: !model.isBusy,
                   ),
                   verticalSpaceLarge,
                   AuthButton(
@@ -54,22 +56,12 @@ class LoginView extends StatelessWidget {
                     children: [
                       const Text("Don't have an account? "),
                       TextButton(
-                        onPressed: model.navigateToRegister,
+                        onPressed:
+                            model.isBusy ? null : model.navigateToRegister,
                         child: const Text('Register'),
                       ),
                     ],
                   ),
-                  if (model.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        model.error.toString(),
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

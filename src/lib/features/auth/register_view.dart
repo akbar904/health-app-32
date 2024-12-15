@@ -14,7 +14,7 @@ class RegisterView extends StatelessWidget {
       viewModelBuilder: () => RegisterViewModel(),
       builder: (context, model, child) => Scaffold(
         body: SafeArea(
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Form(
               key: model.formKey,
@@ -33,6 +33,7 @@ class RegisterView extends StatelessWidget {
                     label: 'Name',
                     controller: model.nameController,
                     validator: model.validateName,
+                    enabled: !model.isBusy,
                   ),
                   verticalSpaceMedium,
                   AuthTextField(
@@ -40,6 +41,7 @@ class RegisterView extends StatelessWidget {
                     controller: model.emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: model.validateEmail,
+                    enabled: !model.isBusy,
                   ),
                   verticalSpaceMedium,
                   AuthTextField(
@@ -47,6 +49,7 @@ class RegisterView extends StatelessWidget {
                     controller: model.passwordController,
                     obscureText: true,
                     validator: model.validatePassword,
+                    enabled: !model.isBusy,
                   ),
                   verticalSpaceLarge,
                   AuthButton(
@@ -60,22 +63,11 @@ class RegisterView extends StatelessWidget {
                     children: [
                       const Text('Already have an account? '),
                       TextButton(
-                        onPressed: model.navigateToLogin,
+                        onPressed: model.isBusy ? null : model.navigateToLogin,
                         child: const Text('Login'),
                       ),
                     ],
                   ),
-                  if (model.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        model.error.toString(),
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

@@ -13,23 +13,60 @@ class HomeView extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Student Course Management'),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: model.logout,
-            ),
+            if (model.isBusy)
+              const Padding(
+                padding: EdgeInsets.only(right: 16.0),
+                child: Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+              )
+            else
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: model.logout,
+                tooltip: 'Logout',
+              ),
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Welcome, ${model.userName}!'),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: model.navigateToCourses,
-                child: const Text('View My Courses'),
-              ),
-            ],
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Welcome, ${model.userName}!',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: model.isBusy ? null : model.navigateToCourses,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                  child: model.isBusy
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : const Text('View My Courses'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

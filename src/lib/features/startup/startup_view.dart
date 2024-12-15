@@ -10,14 +10,37 @@ class StartupView extends StatelessWidget {
     return ViewModelBuilder<StartupViewModel>.reactive(
       viewModelBuilder: () => StartupViewModel(),
       onModelReady: (model) => model.runStartupLogic(),
-      builder: (context, model, child) => const Scaffold(
+      builder: (context, model, child) => Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 20),
-              Text('Loading...'),
+              Image.asset(
+                'assets/images/steve.png',
+                width: 100,
+                height: 100,
+              ),
+              const SizedBox(height: 16),
+              if (model.hasError)
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'An error occurred while starting the app',
+                    style: TextStyle(
+                      color: Colors.red[700],
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              else ...[
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                const Text(
+                  'Loading...',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ],
           ),
         ),

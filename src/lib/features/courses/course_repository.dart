@@ -1,4 +1,5 @@
 import 'package:my_app/models/course.dart';
+import 'package:my_app/utils/exceptions/api_exception.dart';
 
 class CourseRepository {
   final List<Course> _courses = [
@@ -21,29 +22,72 @@ class CourseRepository {
   ];
 
   List<Course> getCourses() {
-    return List.unmodifiable(_courses);
+    try {
+      return List.unmodifiable(_courses);
+    } catch (e) {
+      throw APIException(
+        userMessage: 'Unable to retrieve courses. Please try again.',
+        technicalDetails: e.toString(),
+        errorCode: 'FETCH_ERROR',
+      );
+    }
   }
 
   Future<void> addCourse(Course course) async {
-    _courses.add(course);
+    try {
+      if (_courses.any((c) => c.name == course.name)) {
+        throw ValidationException('A course with this name already exists.');
+      }
+      _courses.add(course);
+    } catch (e) {
+      if (e is ValidationException) rethrow;
+      throw APIException(
+        userMessage: 'Unable to add course. Please try again.',
+        technicalDetails: e.toString(),
+        errorCode: 'ADD_ERROR',
+      );
+    }
   }
 
   Future<void> removeCourse(String courseId) async {
-    _courses.removeWhere((course) => course.id == courseId);
+    try {
+      final index = _courses.indexWhere((course) => course.id == courseId);
+      if (index == -1) {
+        throw ValidationException('Course not found.');
+      }
+      _courses.removeAt(index);
+    } catch (e) {
+      if (e is ValidationException) rethrow;
+      throw APIException(
+        userMessage: 'Unable to remove course. Please try again.',
+        technicalDetails: e.toString(),
+        errorCode: 'DELETE_ERROR',
+      );
+    }
   }
 
   Future<void> updateCourse(Course updatedCourse) async {
-    final index =
-        _courses.indexWhere((course) => course.id == updatedCourse.id);
-    if (index != -1) {
+    try {
+      final index =
+          _courses.indexWhere((course) => course.id == updatedCourse.id);
+      if (index == -1) {
+        throw ValidationException('Course not found.');
+      }
       _courses[index] = updatedCourse;
+    } catch (e) {
+      if (e is ValidationException) rethrow;
+      throw APIException(
+        userMessage: 'Unable to update course. Please try again.',
+        technicalDetails: e.toString(),
+        errorCode: 'UPDATE_ERROR',
+      );
     }
   }
 
   Course? getCourseById(String id) {
     try {
       return _courses.firstWhere((course) => course.id == id);
-    } catch (_) {
+    } catch (e) {
       return null;
     }
   }
