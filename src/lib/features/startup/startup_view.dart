@@ -15,6 +15,14 @@ class StartupView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Text(
+                'Student Course Management',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20),
               CircularProgressIndicator(),
               SizedBox(height: 20),
               Text('Loading...'),
