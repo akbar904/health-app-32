@@ -60,13 +60,18 @@ class LoginView extends StatelessWidget {
                     ],
                   ),
                   if (model.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(top: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                       child: Text(
                         model.error.toString(),
                         style: const TextStyle(
                           color: Colors.red,
-                          fontSize: 12,
+                          fontSize: 14,
                         ),
                       ),
                     ),
