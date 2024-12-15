@@ -10,6 +10,16 @@ class HomeViewModel extends BaseViewModel {
 
   String get userName => _authRepository.currentUser?.name ?? 'User';
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
   Future<void> navigateToCourses() async {
     try {
       await _navigationService.navigateToCoursesView();

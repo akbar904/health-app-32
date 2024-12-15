@@ -8,6 +8,16 @@ class CoursesViewModel extends BaseViewModel {
 
   List<Course> get courses => _courseService.courses;
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
   Future<void> addCourse(Course course) async {
     try {
       setBusy(true);

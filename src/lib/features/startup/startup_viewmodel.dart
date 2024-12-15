@@ -8,6 +8,16 @@ class StartupViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   final _authRepository = locator<AuthRepository>();
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
   Future<void> runStartupLogic() async {
     try {
       setBusy(true);

@@ -13,6 +13,11 @@ class LoginViewModel extends BaseViewModel {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your email address';
@@ -32,6 +37,11 @@ class LoginViewModel extends BaseViewModel {
       return 'Password must be at least 6 characters';
     }
     return null;
+  }
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
   }
 
   Future<void> login() async {

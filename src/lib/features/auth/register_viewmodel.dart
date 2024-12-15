@@ -14,6 +14,16 @@ class RegisterViewModel extends BaseViewModel {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  bool get hasModelError => _errorMessage != null;
+
+  void setModelError(String message) {
+    _errorMessage = message;
+    notifyListeners();
+  }
+
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your name';
