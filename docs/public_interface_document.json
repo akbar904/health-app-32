@@ -1659,6 +1659,39 @@
         "package:flutter/material.dart",
         "package:my_app/ui/common/app_colors.dart"
       ]
+    },
+    {
+      "name": "lib/core/base_viewmodel.dart",
+      "description": "The BaseViewModel class is the foundation for all view models in the application. It provides common functionality and state management capabilities that are shared across different view models, allowing for consistent and efficient handling of application state.",
+      "class_diagram": "@startuml\nclass BaseViewModel {\n  -bool _isBusy\n  -String? _errorMessage\n  +bool get isBusy\n  +String? get modelError\n  +bool get hasModelError\n  +void setBusy(bool value)\n  +void setErrorMessage(String message)\n  +void clearError()\n}\n@enduml",
+      "methods": [
+        {
+          "name": "setBusy",
+          "description": "Sets the busy state of the view model, which is used to indicate when the view model is performing a long-running operation. Notifies listeners of the state change.",
+          "parameters": [
+            "bool value"
+          ],
+          "return_type": "void"
+        },
+        {
+          "name": "setErrorMessage",
+          "description": "Sets the error message for the view model, which is used to communicate any errors that may have occurred during the view model's operation. Notifies listeners of the state change.",
+          "parameters": [
+            "String message"
+          ],
+          "return_type": "void"
+        },
+        {
+          "name": "clearError",
+          "description": "Clears the error message for the view model, resetting the error state. Notifies listeners of the state change.",
+          "parameters": null,
+          "return_type": "void"
+        }
+      ],
+      "dependencies": [
+        "package:flutter/foundation.dart",
+        "package:stacked/stacked.dart"
+      ]
     }
   ],
   "dependencies": [

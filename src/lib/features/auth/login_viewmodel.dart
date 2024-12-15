@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/app/app.router.dart';
+import 'package:my_app/core/base_viewmodel.dart';
 import 'package:my_app/features/auth/auth_repository.dart';
-import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends BaseViewModel {
@@ -12,11 +12,6 @@ class LoginViewModel extends BaseViewModel {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
-
-  bool get hasModelError => _errorMessage != null;
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -37,11 +32,6 @@ class LoginViewModel extends BaseViewModel {
       return 'Password must be at least 6 characters';
     }
     return null;
-  }
-
-  void setModelError(String message) {
-    _errorMessage = message;
-    notifyListeners();
   }
 
   Future<void> login() async {
@@ -69,7 +59,7 @@ class LoginViewModel extends BaseViewModel {
       } else {
         errorMessage = 'Login failed. Please try again.';
       }
-      setModelError(errorMessage);
+      setErrorMessage(errorMessage);
     } finally {
       setBusy(false);
     }
