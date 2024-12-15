@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/app/app.router.dart';
 import 'package:my_app/features/auth/auth_repository.dart';
+import 'package:my_app/services/error_service.dart';
+import 'package:my_app/utils/exceptions/error_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class LoginViewModel extends BaseViewModel {
   final _authRepository = locator<AuthRepository>();
   final _navigationService = locator<NavigationService>();
+  final _dialogService = locator<DialogService>();
+  final _errorService = locator<ErrorService>();
 
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -44,7 +48,14 @@ class LoginViewModel extends BaseViewModel {
       );
       await _navigationService.replaceWithHomeView();
     } catch (e) {
-      setError(e.toString());
+      final errorMessage = ErrorHandler.handleLoginError(e);
+      _errorService.logError(e, null);
+
+      await _dialogService.showCustomDialog(
+        variant: DialogType.error,
+        title: 'Login Failed',
+        description: errorMessage,
+      );
     } finally {
       setBusy(false);
     }

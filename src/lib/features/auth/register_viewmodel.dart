@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:my_app/app/app.locator.dart';
 import 'package:my_app/app/app.router.dart';
 import 'package:my_app/features/auth/auth_repository.dart';
+import 'package:my_app/services/error_service.dart';
+import 'package:my_app/utils/exceptions/error_handler.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class RegisterViewModel extends BaseViewModel {
   final _authRepository = locator<AuthRepository>();
   final _navigationService = locator<NavigationService>();
+  final _dialogService = locator<DialogService>();
+  final _errorService = locator<ErrorService>();
 
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
@@ -17,6 +21,9 @@ class RegisterViewModel extends BaseViewModel {
   String? validateName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Name is required';
+    }
+    if (value.length < 2) {
+      return 'Name must be at least 2 characters long';
     }
     return null;
   }
@@ -53,7 +60,14 @@ class RegisterViewModel extends BaseViewModel {
       );
       await _navigationService.replaceWithHomeView();
     } catch (e) {
-      setError(e.toString());
+      final errorMessage = ErrorHandler.handleRegistrationError(e);
+      _errorService.logError(e, null);
+
+      await _dialogService.showCustomDialog(
+        variant: DialogType.error,
+        title: 'Registration Failed',
+        description: errorMessage,
+      );
     } finally {
       setBusy(false);
     }
